@@ -1,9 +1,9 @@
 "use server";
 
-import { createOctokitInstance } from "@/lib/utils/octokit";
 import { getAuth } from "@/lib/auth";
 import { getInstallations } from "@/lib/githubApp";
 import { getUserToken } from "@/lib/token";
+import { createOctokitInstance } from "@/lib/utils/octokit";
 import templates from "@/lib/utils/templates";
 import { z } from "zod";
 
@@ -19,7 +19,7 @@ const handleCopyTemplate = async (prevState: any, formData: FormData) => {
     const templateRepos = templates.map(template => template.repository) as string[];
     const templateRepoValidation = z.enum(templateRepos as [string, ...string[]]).safeParse(formData.get("template"));
     if (!templateRepoValidation.success) throw new Error ("Invalid template repository");
-    
+
     const ownerAndNameValidation = z.object({
 			owner: z.string().trim().min(1),
 			name: z.string().trim().min(1),
@@ -43,6 +43,7 @@ const handleCopyTemplate = async (prevState: any, formData: FormData) => {
       template_repo,
       owner,
       name,
+			private: true
     });
 
 		return {
